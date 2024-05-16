@@ -19,7 +19,7 @@ def set_date(year, month):
     return start_date1+end_date1, start_date2+end_date2
 
 #해당 기간에 해당 품목에 판매글 추출
-def Get_soldoutpost (item, date) :
+def Get_sellingpost (item, date, file_num) :
 
     headers = {"User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"}
 
@@ -35,11 +35,11 @@ def Get_soldoutpost (item, date) :
         content = Soup.find("div", id = "content-area").find("div", id = "main-area").find("div", "article-board m-tcol-c").find_next("div")
 
         # 판매된 게시글 찾기
-        content = content.find_all('span', 'list-i-sellout')
+        content = content.find_all('span', 'list-i-selling')
 
         #현재 페이지에서 판매된 게시글이 탐색됐을 시
         if content:
-            with open(f"../soldout_URL/soldout_url_{date}.txt", 'w') as f:
+            with open(f"selling_URL/selling_url_naracafe{file_num}.txt", 'a') as f:
                 for post in content:
                     post_url = root_url + post.find_previous_siblings()[0]['href'][6:]
                     f.write(post_url)
@@ -47,20 +47,21 @@ def Get_soldoutpost (item, date) :
 
 #시작 기간부터 24년 5월까지 해당 품목에 대한 판매글 추출
 def Crawling_until_today(year, month, item):
-    max_retries = 5
+    max_retries = 3
     retries = 0
-
+    file_num = 0
     while year != 2024 or month != 6:
         date = set_date(year, month)
         try:
             # 1일부터 15일
             print(date[0])
-            Get_soldoutpost(item, date[0])
+            Get_sellingpost(item, date[0], file_num)
             # 16일부터 말일
             print(date[1])
-            Get_soldoutpost(item, date[1])
+            Get_sellingpost(item, date[1], file_num)
             retries = 0  # 성공 시 재시도 횟수 초기화
         except Exception as e:
+            file_num += 1
             retries += 1
             print(f"Error occurred: {e}", f", Error Count: {retries}")
             if retries > max_retries:
@@ -75,8 +76,8 @@ def Crawling_until_today(year, month, item):
 if __name__ == "__main__" :
 
     # 매입 교환 케이스 %B8%C5%C0%D4+%B1%B3%C8%AF+%C4%C9%C0%CC%BD%BA+%BB%F0%B4%CF%B4%D9
-    year = 2023
-    month = 10
+    year = 2022
+    month = 9
     item = "%BE%C6%C0%CC%C6%F914" # iphone 14
     
     Crawling_until_today(year, month, item)
