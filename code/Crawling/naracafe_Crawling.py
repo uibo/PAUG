@@ -67,7 +67,7 @@ def Crawling_until_today(year, month, item, status):
 
 if __name__ == "__main__" :
     status_list = ['selling', 'soldout']
-    # 매입 교환 케이스 포함된 게시글 필터링 적용됨 "%B8%C5%C0%D4+%B1%B3%C8%AF+%C4%C9%C0%CC%BD%BA+%BB%F0%B4%CF%B4%D9"
+    # 매입 교환 케이스 삽니다 구매 포함된 게시글 필터링 적용됨 "%B8%C5%C0%D4+%B1%B3%C8%AF+%C4%C9%C0%CC%BD%BA+%BB%F0%B4%CF%B4%D9+%B1%B8%B8%C5"
     # 아래 변수들 조작 필요
     year = 2022
     month = 9
